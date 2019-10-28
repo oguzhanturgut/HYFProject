@@ -1,0 +1,3 @@
+{
+  "mongoURI": "mongodb+srv://dbUser:dbPassword@hyf-sapzx.mongodb.net/test?retryWrites=true&w=majority"
+}
