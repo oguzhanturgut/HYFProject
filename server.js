@@ -8,6 +8,9 @@ const connectDB = require('./config/db');
 // Connect to database
 connectDB(db);
 
+// Middleware for body parser
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
