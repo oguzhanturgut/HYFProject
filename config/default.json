@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://dbUser:dbPassword@hyf-sapzx.mongodb.net/test?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://dbUser:dbPassword@hyf-sapzx.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "4Xy+=mGLTJUv$4^hZ$DY"
 }
