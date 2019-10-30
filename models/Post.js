@@ -36,13 +36,13 @@ const PostSchema = new Schema({
       },
       avatar: { type: String },
       date: {
-        type: date,
+        type: Date,
         default: Date.now,
       },
     },
   ],
   date: {
-    type: date,
+    type: Date,
     default: Date.now,
   },
 });
