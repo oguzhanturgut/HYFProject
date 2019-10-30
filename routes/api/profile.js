@@ -61,8 +61,6 @@ router.post(
         social,
       }),
     );
-    // console.log(profileFields);
-    // console.log(social);
 
     try {
       const profile = await Profile.findOneAndUpdate(
@@ -100,11 +98,11 @@ router.get('/user/:userID', async (req, res) => {
   try {
     const { userID } = req.params;
     const profile = await Profile.findOne({ user: userID }).populate('user', ['name', 'avatar']);
-    if (!profile) return res.status(400).send('Profile not found');
+    if (!profile) return res.status(400).json({ msg: 'Profile not found' });
     res.json(profile);
   } catch (error) {
     console.error(error.message);
-    if (error.name === 'CastError') return res.status(400).send('Profile not found');
+    if (error.name === 'CastError') return res.status(400).json({ msg: 'Profile not found' });
     return res.status(500).send('Server Error');
   }
 });
