@@ -1,4 +1,6 @@
 {
   "mongoURI": "mongodb+srv://dbUser:dbPassword@hyf-sapzx.mongodb.net/test?retryWrites=true&w=majority",
-  "jwtSecret": "4Xy+=mGLTJUv$4^hZ$DY"
+  "jwtSecret": "4Xy+=mGLTJUv$4^hZ$DY",
+  "githubClientId": "8c715ca42cd3b8350a03",
+  "githubSecret": "0a1c0dab386db745a23d779e4409915735fdad37"
 }
