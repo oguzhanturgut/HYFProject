@@ -135,4 +135,75 @@ router.put('/unlike/:id', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
+// @route   POST /api/posts/comment/:postId
+// @desc    Comment on a post
+// @access  Private
+router.post(
+  '/comment/:postId',
+  [
+    auth,
+    [
+      check('text', 'Text is required')
+        .not()
+        .isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+    try {
+      const { id } = req.user;
+      const { postId } = req.params;
+      const user = await User.findById(id).select({ name: 1, avatar: 1 });
+      const post = await Post.findById(postId);
+      if (!post) return res.status(404).json({ msg: 'Post not found' });
+
+      const newComment = {
+        text: req.body.text,
+        name: user.name,
+        avatar: user.avatar,
+        user: id,
+      };
+      post.comments.unshift(newComment);
+
+      await post.save();
+      res.send(post.comments);
+    } catch (error) {
+      console.error(error.message);
+      if (error.name === 'CastError') return res.status(400).json({ msg: 'Post not found' });
+      res.status(500).send('Server Error');
+    }
+  },
+);
+
+// @route   DELETE /api/posts/comment/:postId/:commentId
+// @desc    Delete comment by id
+// @access  Private
+router.delete('/comment/:postId/:commentId', auth, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).json({ msg: 'Post not found' });
+
+    const comment = post.comments.find(comment => comment._id.toString() === commentId);
+    if (!comment) return res.status(404).json({ msg: 'Comment not found' });
+
+    if (comment.user.toString() !== req.user.id)
+      return res.status(401).json({ msg: 'User not authorized' });
+
+    const removeIndex = post.comments.findIndex(comment => comment._id.toString() === commentId);
+
+    post.comments.splice(removeIndex, 1);
+    await post.save();
+    res.json(post.comments);
+  } catch (error) {
+    console.error(error.message);
+    if (error.name === 'CastError') return res.status(400).json({ msg: 'Post not found' });
+    res.status(500).send('Server Error');
+  }
+});
+
+//TODO Update comment
 module.exports = router;
