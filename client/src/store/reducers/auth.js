@@ -9,6 +9,13 @@ const initialState = {
 
 const auth = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.USER_LOADED:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        user: action.payload,
+      };
     case actionTypes.REGISTER_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       return {
@@ -17,6 +24,7 @@ const auth = (state = initialState, action) => {
         isAuthenticated: true,
         loading: false,
       };
+    case actionTypes.AUTH_ERROR:
     case actionTypes.REGISTER_FAIL:
       localStorage.removeItem('token');
       return {
@@ -25,6 +33,7 @@ const auth = (state = initialState, action) => {
         isAuthenticated: false,
         loading: false,
       };
+
     default:
       return state;
   }

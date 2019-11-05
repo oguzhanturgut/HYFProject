@@ -1,6 +1,19 @@
 import axios from 'axios';
 import { setAlert } from './alert';
 import * as actionTypes from './types';
+import setAuthToken from '../../utils/setAuthToken';
+
+// Load User
+export const loadUser = () => async dispatch => {
+  localStorage.token && setAuthToken(localStorage.token);
+
+  try {
+    const response = await axios.get('/api/auth');
+    dispatch({ type: actionTypes.USER_LOADED, payload: response.data });
+  } catch (error) {
+    dispatch({ type: actionTypes.AUTH_ERROR });
+  }
+};
 
 // Register User
 export const register = ({ name, email, password }) => async dispatch => {
