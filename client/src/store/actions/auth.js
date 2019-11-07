@@ -56,3 +56,7 @@ export const login = ({ email, password }) => async dispatch => {
     dispatch({ type: actionTypes.LOGIN_FAIL });
   }
 };
+
+export const logout = () => dispatch => {
+  dispatch({ type: actionTypes.LOGOUT });
+};
