@@ -17,6 +17,7 @@ const auth = (state = initialState, action) => {
         user: action.payload,
       };
     case actionTypes.REGISTER_SUCCESS:
+    case actionTypes.LOGIN_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       return {
         ...state,
@@ -26,6 +27,7 @@ const auth = (state = initialState, action) => {
       };
     case actionTypes.AUTH_ERROR:
     case actionTypes.REGISTER_FAIL:
+    case actionTypes.LOGIN_FAIL:
       localStorage.removeItem('token');
       return {
         ...state,
