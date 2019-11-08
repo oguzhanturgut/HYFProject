@@ -54,3 +54,23 @@ export const deletePost = postId => async dispatch => {
     });
   }
 };
+
+// Add post
+export const addPost = formData => async dispatch => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+
+  try {
+    const response = await axios.post('/api/posts', formData, config);
+    dispatch({ type: actionTypes.ADD_POST, payload: response.data });
+    dispatch(setAlert('Post created', 'success'));
+  } catch (error) {
+    dispatch({
+      type: actionTypes.POST_ERROR,
+      payload: { msg: error.response.text, status: error.response.status },
+    });
+  }
+};
