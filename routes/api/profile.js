@@ -6,6 +6,7 @@ const request = require('request');
 const config = require('config');
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
+const Post = require('../../models/Post');
 
 // @route   GET /api/profile/me
 // @desc    Get current user profile
@@ -114,8 +115,11 @@ router.get('/user/:userID', async (req, res) => {
 router.delete('/', auth, async (req, res) => {
   try {
     const { id } = req.user;
-    // TODO Delete user Posts
+    // Delete user posts
+    await Post.deleteMany({ user: id });
+    // Delete profile
     await Profile.findOneAndRemove({ user: id });
+    // Delete user
     await User.findOneAndRemove({ _id: id });
 
     res.json({ msg: 'User deleted' });
@@ -172,6 +176,7 @@ router.delete('/experience/:expID', [auth], async (req, res) => {
     const profile = await Profile.findOne({ user: id });
     const removeIndex = profile.experience.findIndex(exp => exp._id.toString() === expID);
     profile.experience.splice(removeIndex, 1);
+    await profile.save();
     res.json(profile);
   } catch (error) {
     console.error(error.message);
@@ -229,6 +234,7 @@ router.delete('/education/:eduID', [auth], async (req, res) => {
     const profile = await Profile.findOne({ user: id });
     const removeIndex = profile.education.findIndex(edu => edu._id.toString() === eduID);
     profile.education.splice(removeIndex, 1);
+    profile.save();
     res.json(profile);
   } catch (error) {
     console.error(error.message);
