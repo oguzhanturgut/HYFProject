@@ -3,7 +3,6 @@ import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import * as actionTypes from '../../store/actions/types';
 import { addEducation } from '../../store/actions/profile';
 
 const AddEducation = ({ addEducation, history }) => {
@@ -105,9 +104,9 @@ const AddEducation = ({ addEducation, history }) => {
           ></textarea>
         </div>
         <input type='submit' class='btn btn-primary my-1' />
-        <a class='btn btn-light my-1' href='dashboard.html'>
+        <Link class='btn btn-light my-1' href='dashboard.html'>
           Go Back
-        </a>
+        </Link>
       </form>
     </Fragment>
   );
@@ -120,4 +119,4 @@ AddEducation.propTypes = {
 export default connect(
   null,
   { addEducation },
-)(AddEducation);
+)(withRouter(AddEducation));

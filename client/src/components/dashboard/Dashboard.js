@@ -13,7 +13,7 @@ import { getCurrentProfile, deleteAccount } from '../../store/actions/profile';
 const Dashboard = ({ auth: { user }, profile: { profile, loading }, getCurrentProfile }) => {
   useEffect(() => {
     getCurrentProfile();
-  }, []);
+  }, [getCurrentProfile]);
 
   return loading && profile === null ? (
     <Spinner />
