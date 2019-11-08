@@ -15,6 +15,48 @@ export const getCurrentProfile = () => async dispatch => {
   }
 };
 
+//Get all profiles
+export const getProfiles = () => async dispatch => {
+  dispatch({ type: actionTypes.CLEAR_PROFILE });
+
+  try {
+    const response = await axios.get('/api/profile');
+    dispatch({ type: actionTypes.GET_PROFILES, payload: response.data });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.PROFILE_ERROR,
+      payload: { msg: error.response.text, status: error.response.status },
+    });
+  }
+};
+
+//Get all profiles
+//TODO profile state uses the same slice for both logged in user and viewed user
+export const getProfileById = userId => async dispatch => {
+  try {
+    const response = await axios.get(`/api/profile/user/${userId}`);
+    dispatch({ type: actionTypes.GET_PROFILE, payload: response.data });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.PROFILE_ERROR,
+      payload: { msg: error.response.text, status: error.response.status },
+    });
+  }
+};
+
+//Get all profiles
+export const getGithubRepos = username => async dispatch => {
+  try {
+    const response = await axios.get(`/api/profile/github/${username}`);
+    dispatch({ type: actionTypes.GET_REPOS, payload: response.data });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.PROFILE_ERROR,
+      payload: { msg: error.response.text, status: error.response.status },
+    });
+  }
+};
+
 //Create or update profile
 export const createProfile = (formData, history, edit = false) => async dispatch => {
   try {

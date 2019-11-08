@@ -17,6 +17,18 @@ const profile = (state = initialState, action) => {
         profile: action.payload,
         loading: false,
       };
+    case actionTypes.GET_PROFILES:
+      return {
+        ...state,
+        profiles: action.payload,
+        loading: false,
+      };
+    case actionTypes.GET_REPOS:
+      return {
+        ...state,
+        repos: action.payload,
+        loading: false,
+      };
     case actionTypes.PROFILE_ERROR:
       return {
         ...state,
