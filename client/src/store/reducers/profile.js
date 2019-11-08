@@ -11,6 +11,7 @@ const initialState = {
 const profile = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_PROFILE:
+    case actionTypes.UPDATE_PROFILE:
       return {
         ...state,
         profile: action.payload,
