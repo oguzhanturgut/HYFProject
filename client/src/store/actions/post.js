@@ -14,3 +14,29 @@ export const getPosts = () => async dispatch => {
     });
   }
 };
+
+// Add like
+export const addLike = postId => async dispatch => {
+  try {
+    const response = await axios.put(`/api/posts/like/${postId}`);
+    dispatch({ type: actionTypes.UPDATE_LIKES, payload: { id: postId, likes: response.data } });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.POST_ERROR,
+      payload: { msg: error.response.text, status: error.response.status },
+    });
+  }
+};
+//TODO only need one thumbs up button and toggle like onClick
+// Remove like
+export const removeLike = postId => async dispatch => {
+  try {
+    const response = await axios.put(`/api/posts/unlike/${postId}`);
+    dispatch({ type: actionTypes.UPDATE_LIKES, payload: { id: postId, likes: response.data } });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.POST_ERROR,
+      payload: { msg: error.response.text, status: error.response.status },
+    });
+  }
+};

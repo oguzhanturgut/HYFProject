@@ -23,6 +23,15 @@ const post = (state = initialState, action) => {
         error: action.payload,
       };
 
+    case actionTypes.UPDATE_LIKES:
+      return {
+        ...state,
+        posts: state.posts.map(post =>
+          post._id === action.payload.id ? { ...post, likes: action.payload.likes } : post,
+        ),
+        loading: false,
+      };
+
     default:
       return state;
   }
