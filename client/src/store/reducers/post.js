@@ -27,3 +27,5 @@ const post = (state = initialState, action) => {
       return state;
   }
 };
+
+export default post;
