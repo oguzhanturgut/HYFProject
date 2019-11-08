@@ -16,6 +16,13 @@ const post = (state = initialState, action) => {
         loading: false,
       };
 
+    case actionTypes.DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.filter(post => post._id !== action.payload),
+        loading: false,
+      };
+
     case actionTypes.POST_ERROR:
       return {
         ...state,
