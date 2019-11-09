@@ -49,6 +49,19 @@ const post = (state = initialState, action) => {
         loading: false,
       };
 
+    case actionTypes.ADD_COMMENT:
+      return { ...state, post: { ...state.post, comments: action.payload }, loading: false };
+
+    case actionTypes.REMOVE_ALERT:
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comment: state.post.comments.filter(comment => comment._id !== action.payload),
+          loading: false,
+        },
+      };
+
     default:
       return state;
   }
