@@ -52,12 +52,12 @@ const post = (state = initialState, action) => {
     case actionTypes.ADD_COMMENT:
       return { ...state, post: { ...state.post, comments: action.payload }, loading: false };
 
-    case actionTypes.REMOVE_ALERT:
+    case actionTypes.REMOVE_COMMENT:
       return {
         ...state,
         post: {
           ...state.post,
-          comment: state.post.comments.filter(comment => comment._id !== action.payload),
+          comments: state.post.comments.filter(comment => comment._id !== action.payload),
           loading: false,
         },
       };
