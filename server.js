@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const config = require('config');
-const PORT = process.env.port || 5000;
 const db = config.get('mongoURI');
 const connectDB = require('./config/db');
 const path = require('path');
@@ -26,6 +25,4 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
+app.listen(process.env.PORT || 5000);
