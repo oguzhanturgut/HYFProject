@@ -43,6 +43,8 @@ router.post(
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] });
+      if (!user.confirmed)
+        return res.status(400).json({ errors: [{ msg: 'Please confirm your email to login' }] });
 
       const payload = {
         user: {
