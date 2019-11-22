@@ -17,6 +17,11 @@ const auth = (state = initialState, action) => {
         user: action.payload,
       };
     case actionTypes.REGISTER_SUCCESS:
+      return {
+        ...state,
+        isAuthenticated: false,
+        loading: false,
+      };
     case actionTypes.LOGIN_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       return {

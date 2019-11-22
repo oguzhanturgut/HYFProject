@@ -25,8 +25,8 @@ export const register = ({ name, email, password }) => async dispatch => {
   const body = JSON.stringify({ name, email, password });
   try {
     const response = await axios.post('/api/users', body, config);
-    dispatch({ type: actionTypes.REGISTER_SUCCESS, payload: response.data });
-    dispatch(loadUser());
+    dispatch({ type: actionTypes.REGISTER_SUCCESS });
+    dispatch(setAlert(response.data.msg, 'success'));
   } catch (error) {
     const { errors } = error.response.data;
     if (errors) {
