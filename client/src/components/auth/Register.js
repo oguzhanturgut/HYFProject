@@ -8,6 +8,7 @@ import { register } from '../../store/actions/auth';
 
 const Register = ({ setAlert, register, isAuthenticated }) => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', password2: '' });
+  const [isMailSent, setIsMailSent] = useState(false);
 
   const { name, email, password, password2 } = formData;
 
@@ -19,12 +20,20 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
       setAlert('Passwords do not match', 'danger');
     } else {
       register({ name, email, password });
+      setIsMailSent(true);
     }
   };
 
   if (isAuthenticated) return <Redirect to='/dashboard' />;
 
-  return (
+  return isMailSent ? (
+    <Fragment>
+      <h1 className='large text-primary'>Confirm Email</h1>
+      <p className='lead'>
+        <i className='fas fa-mail'></i> Confirmation mail is sent to {email}
+      </p>
+    </Fragment>
+  ) : (
     <Fragment>
       <h1 className='large text-primary'>Sign Up</h1>
       <p className='lead'>
@@ -93,7 +102,4 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(
-  mapStateToProps,
-  { setAlert, register },
-)(Register);
+export default connect(mapStateToProps, { setAlert, register })(Register);
