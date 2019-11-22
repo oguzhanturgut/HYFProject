@@ -53,24 +53,44 @@ router.post(
 
       const emailToken = jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1d' });
 
-      const confirmURL = `http://localhost:5000/confirm/${emailToken}`;
+      const confirmURL = `http://localhost:5000/api/users/confirm/${emailToken}`;
 
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       const msg = {
         to: user.email,
-        from: 'test@example.com',
+        from: 'noreply@hackyourfuture.net',
         subject: 'Confirm Email',
         text: 'Click the link below to confirm your email.',
         html: `<a href=${confirmURL}>${confirmURL}</a>`,
       };
 
       await sgMail.send(msg);
-      res.json({ msg: 'Confirmation mail sent' });
+      res.json({ msg: 'Confirmation mail sent', confirmURL });
     } catch (error) {
       return res.status(500).send('Server Error');
     }
   },
 );
+
+// @route   GET /api/users/confirm/:emailToken
+// @desc    Confirm user email
+// @access  Public
+router.get('/confirm/:emailToken', async (req, res) => {
+  const { emailToken } = req.params;
+  try {
+    const {
+      user: { id },
+    } = jwt.verify(emailToken, config.get('jwtSecret'));
+    await User.findOneAndUpdate(
+      { _id: id },
+      { $set: { confirmed: true } },
+      { new: true },
+    );
+    res.json({ msg: 'Email is confirmed' });
+  } catch (error) {
+    return res.status(401).send({ msg: 'Invalid Token' });
+  }
+});
 
 module.exports = router;
