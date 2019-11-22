@@ -6,6 +6,7 @@ const User = require('../../models/User');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const sgMail = require('@sendgrid/mail');
 
 // @route   POST /api/users
 // @desc    Register new user
@@ -50,10 +51,22 @@ router.post(
         },
       };
 
-      jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 999999 }, (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      });
+      const emailToken = jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1d' });
+
+      const confirmURL = `http://localhost:5000/confirm/${emailToken}`;
+
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+      const msg = {
+        to: user.email,
+        from: 'test@example.com',
+        subject: 'Confirm Email',
+        text: 'Click the link below to confirm your email.',
+        html: `<a href=${confirmURL}>${confirmURL}</a>`,
+      };
+
+      await sgMail.send(msg);
+      res.json({ msg: 'Confirmation mail sent' });
     } catch (error) {
       return res.status(500).send('Server Error');
     }
