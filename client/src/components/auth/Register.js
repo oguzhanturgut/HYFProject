@@ -15,12 +15,12 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
   const onChangeHandler = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmitHandler = async e => {
+    setIsMailSent(false);
     e.preventDefault();
     if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      register({ name, email, password });
-      setIsMailSent(true);
+      (await register({ name, email, password })) && setIsMailSent(true);
     }
   };
 

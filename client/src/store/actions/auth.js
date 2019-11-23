@@ -27,12 +27,14 @@ export const register = ({ name, email, password }) => async dispatch => {
     const response = await axios.post('/api/users', body, config);
     dispatch({ type: actionTypes.REGISTER_SUCCESS });
     dispatch(setAlert(response.data.msg, 'success'));
+    return true;
   } catch (error) {
     const { errors } = error.response.data;
     if (errors) {
       errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
     }
     dispatch({ type: actionTypes.REGISTER_FAIL });
+    return false;
   }
 };
 
@@ -47,6 +49,21 @@ export const login = ({ email, password }) => async dispatch => {
   try {
     const response = await axios.post('/api/auth', body, config);
     dispatch({ type: actionTypes.LOGIN_SUCCESS, payload: response.data });
+    dispatch(loadUser());
+  } catch (error) {
+    const { errors } = error.response.data;
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+    dispatch({ type: actionTypes.LOGIN_FAIL });
+  }
+};
+
+// Confirm email
+export const confirmEmail = token => async dispatch => {
+  try {
+    const response = await axios.put(`/api/users/confirm/${token}`);
+    dispatch({ type: actionTypes.CONFIRM_EMAIL, payload: response.data });
     dispatch(loadUser());
   } catch (error) {
     const { errors } = error.response.data;
