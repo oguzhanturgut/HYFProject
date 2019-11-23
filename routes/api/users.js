@@ -54,12 +54,12 @@ router.post(
       };
 
       const transporter = nodemailer.createTransport({
-        host: 'smtp.yandex.com',
+        host: 'smtp-pulse.com',
         port: 465,
         secure: true,
         auth: {
-          user: process.env.YANDEX_USER,
-          pass: process.env.YANDEX_PASS,
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
         },
       });
 
@@ -68,7 +68,7 @@ router.post(
 
       const msg = {
         to: user.email,
-        from: 'arduino.gupta@yandex.com',
+        from: process.env.MAIL_USER,
         subject: 'Confirm Email',
         html: `Hurrah! You've created a Developer Hub account with ${user.email}. Please take a moment to confirm that we can use this address to send you mails. <br/>
         <a href=${confirmURL}>${confirmURL}</a>`,
