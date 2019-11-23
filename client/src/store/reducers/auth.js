@@ -23,6 +23,7 @@ const auth = (state = initialState, action) => {
         loading: false,
       };
     case actionTypes.LOGIN_SUCCESS:
+    case actionTypes.CONFIRM_EMAIL:
       localStorage.setItem('token', action.payload.token);
       return {
         ...state,

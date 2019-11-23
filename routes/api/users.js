@@ -6,7 +6,9 @@ const User = require('../../models/User');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const sgMail = require('@sendgrid/mail');
+const nodemailer = require('nodemailer');
+
+const HOST_ADDR = process.env.HOST_ADDR || 'https://hyf-project-mail.herokuapp.com';
 
 // @route   POST /api/users
 // @desc    Register new user
@@ -51,43 +53,55 @@ router.post(
         },
       };
 
-      const emailToken = jwt.sign(payload, config.get('jwtSecret'), { expiresIn: '1d' });
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
 
-      const confirmURL = `http://localhost:5000/api/users/confirm/${emailToken}`;
-
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      const emailToken = jwt.sign(payload, config.get('emailSecret'), { expiresIn: '1d' });
+      const confirmURL = `${HOST_ADDR}/confirm/${emailToken}`;
 
       const msg = {
         to: user.email,
-        from: 'noreply@hackyourfuture.net',
+        from: 'ye41687@gmail.com',
         subject: 'Confirm Email',
-        text: 'Click the link below to confirm your email.',
-        html: `<a href=${confirmURL}>${confirmURL}</a>`,
+        html: `Hurrah! You've created a Developer Hub account with ${user.email}. Please take a moment to confirm that we can use this address to send you mails. <br/>
+        <a href=${confirmURL}>${confirmURL}</a>`,
       };
 
-      await sgMail.send(msg);
-      res.json({ msg: 'Confirmation mail sent', confirmURL });
+      await transporter.sendMail(msg);
+      res.json({ msg: 'Confirmation mail sent' });
     } catch (error) {
+      console.error(error);
       return res.status(500).send('Server Error');
     }
   },
 );
 
-// @route   GET /api/users/confirm/:emailToken
+// @route   PUT /api/users/confirm/:emailToken
 // @desc    Confirm user email
 // @access  Public
-router.get('/confirm/:emailToken', async (req, res) => {
+router.put('/confirm/:emailToken', async (req, res) => {
   const { emailToken } = req.params;
   try {
     const {
       user: { id },
-    } = jwt.verify(emailToken, config.get('jwtSecret'));
-    await User.findOneAndUpdate(
-      { _id: id },
-      { $set: { confirmed: true } },
-      { new: true },
-    );
-    res.json({ msg: 'Email is confirmed' });
+    } = jwt.verify(emailToken, config.get('emailSecret'));
+    await User.findOneAndUpdate({ _id: id }, { $set: { confirmed: true } }, { new: true });
+    // TODO handle error cases
+    const payload = {
+      user: {
+        id,
+      },
+    };
+
+    jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 999999 }, (err, token) => {
+      if (err) throw err;
+      res.json({ token });
+    });
   } catch (error) {
     return res.status(401).send({ msg: 'Invalid Token' });
   }
