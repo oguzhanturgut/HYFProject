@@ -54,10 +54,12 @@ router.post(
       };
 
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.yandex.com',
+        port: 465,
+        secure: true,
         auth: {
-          user: process.env.GMAIL_USER,
-          pass: process.env.GMAIL_PASS,
+          user: process.env.YANDEX_USER,
+          pass: process.env.YANDEX_PASS,
         },
       });
 
@@ -66,12 +68,11 @@ router.post(
 
       const msg = {
         to: user.email,
-        from: 'ye41687@gmail.com',
+        from: 'arduino.gupta@yandex.com',
         subject: 'Confirm Email',
         html: `Hurrah! You've created a Developer Hub account with ${user.email}. Please take a moment to confirm that we can use this address to send you mails. <br/>
         <a href=${confirmURL}>${confirmURL}</a>`,
       };
-      console.log(process.env);
 
       const result = await transporter.sendMail(msg);
       console.log(result);
