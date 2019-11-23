@@ -71,8 +71,10 @@ router.post(
         html: `Hurrah! You've created a Developer Hub account with ${user.email}. Please take a moment to confirm that we can use this address to send you mails. <br/>
         <a href=${confirmURL}>${confirmURL}</a>`,
       };
+      console.log(process.env);
 
-      await transporter.sendMail(msg);
+      const result = await transporter.sendMail(msg);
+      console.log(result);
       res.json({ msg: 'Confirmation mail sent' });
     } catch (error) {
       console.error(error);
