@@ -14,13 +14,13 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         <Link to='/posts'>Posts</Link>
       </li>
       <li>
-        <Link to='/dashboard' onClick={logout}>
-          <i className='fas fa-user'></i> <span className='hide-sm'>Dashboard</span>
+        <Link to='/dashboard'>
+          <i className='fas fa-user' /> <span className='hide-sm'>Dashboard</span>
         </Link>
       </li>
       <li>
-        <a href='#!' onClick={logout}>
-          <i className='fas fa-sign-out-alt'></i> <span className='hide-sm'>Logout</span>
+        <a onClick={logout} href='#!'>
+          <i className='fas fa-sign-out-alt' /> <span className='hide-sm'>Logout</span>
         </a>
       </li>
     </ul>
@@ -39,6 +39,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       </li>
     </ul>
   );
+
   return (
     <nav className='navbar bg-dark'>
       <h1>
@@ -58,7 +59,4 @@ Navbar.propTypes = {
 
 const mapStateToProps = state => ({ auth: state.auth });
 
-export default connect(
-  mapStateToProps,
-  { logout },
-)(Navbar);
+export default connect(mapStateToProps, { logout })(Navbar);

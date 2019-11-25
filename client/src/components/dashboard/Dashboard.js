@@ -10,7 +10,12 @@ import Education from './Education';
 
 import { getCurrentProfile, deleteAccount } from '../../store/actions/profile';
 
-const Dashboard = ({ auth: { user }, profile: { profile, loading }, getCurrentProfile }) => {
+const Dashboard = ({
+  auth: { user },
+  profile: { profile, loading },
+  getCurrentProfile,
+  deleteAccount,
+}) => {
   useEffect(() => {
     getCurrentProfile();
   }, [getCurrentProfile]);
@@ -59,7 +64,4 @@ const mapStateToProps = state => ({
   profile: state.profile,
 });
 
-export default connect(
-  mapStateToProps,
-  { getCurrentProfile, deleteAccount },
-)(Dashboard);
+export default connect(mapStateToProps, { getCurrentProfile, deleteAccount })(Dashboard);
